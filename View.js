@@ -20,14 +20,11 @@ class View extends EventEmitter {
   }
 
   render() {
-    // Стираем с экрана весь предыдущий текст
-    console.clear();
-    // отображаем ту страницу, на которой мы сейчас находимся
     switch (this.#model.getPage()) {
       case 'start':
         return this.#renderStartPage();
-      // case 'topic':
-      //   return this.#renderTopicPage();
+      case 'quest':
+        return this.#renderQuest();
       // case 'questions':
       //   return this.#renderQuestionsPage();
       default:
@@ -36,15 +33,41 @@ class View extends EventEmitter {
   }
 
   #renderStartPage() {
-    // здесь попросим у модели список тем и предоставим пользователю выбор
-    // ...
-    // теперь уведомим контроллер о том что пользователь выбрал тему
+    console.clear();
     const themes = fs.readdirSync(pathTopic);
-    const str = themes.map((el, index) => (`${index + 1}) ${el}`));
-    console.log(`Выберите тему:\n${str.join('\n')}\n`);
-    const numberOfTopic = readlineSync.question('> ');
+    let str = themes.map((el, index) => (`${index + 1}) ${el}`));
+    str = str.join('\n').replace(/.txt/gi, '');
+    console.log(`Выберите тему:\n${str}\n`);
+    this.emit('topicChosen');
+  }
 
-    this.emit('topicChosen', numberOfTopic);
+  #renderQuest() {
+    const index = readlineSync.question('> ');
+    console.clear();
+    const nameTopic = fs.readdirSync(pathTopic)[index - 1];
+    // Считывание содержимого файла
+    let strTopic = fs.readFileSync(`${pathTopic}/${nameTopic}`, 'utf8');
+    strTopic = strTopic.split('\n');
+    // Вопросы
+    const questions = strTopic.filter((el, i) => i % 3 === 0);
+    // Ответы
+    const answers = strTopic.filter((el, i) => ((i - 1) % 3) === 0);
+
+    // Цикл
+    questions.map((el, i) => {
+      console.clear();
+      console.log(el);
+      let answerFromUser = readlineSync.question('');
+      answerFromUser = answerFromUser.toLowerCase();
+      if (answerFromUser === answers[i]) {
+        console.log('Неплохо\n');
+      } else {
+        console.log(`Стыдно такое не знать, но ответ ${answers[i]}`);
+        readlineSync.question('Дальше =>');
+      }
+    });
+
+    this.emit('stop');
   }
 }
 

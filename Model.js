@@ -11,6 +11,8 @@ class Model extends EventEmitter {
 
   #topic = 'topic';
 
+  #quest = 'quest';
+
   #questions = 'questions';
 
   #answers = 'answers';
@@ -29,24 +31,11 @@ class Model extends EventEmitter {
 
   // Стартовая страница с темами
   startChosen() {
-    this.#page = 'chose-Topic'; // Страница выбора темы
-    this.#topic = fs.readdirSync(pathTopic); // Массив тем
+    this.#page = 'quest'; // Страница выбора темы
     this.emit('update');
   }
 
-  get t() { return this.#topic; }
-
-  // Страница с выборанной темой
-  chooseTopic(topic) {
-    // Обработка выбранного файла
-    const nameTopic = this.#topic[topic];
-    // Считывание содержимого файла
-    let strTopic = fs.readFileSync(`${pathTopic}/${nameTopic}`, 'utf8');
-    strTopic = strTopic.split('\n');
-    // Вопросы
-    this.#questions = strTopic.filter((el, index) => index % 3 === 0);
-    // Ответы
-    this.#answers = strTopic.filter((el, index) => ((index - 1) % 3) === 0);
+  quest() {
     this.emit('update');
   }
 
@@ -56,18 +45,5 @@ class Model extends EventEmitter {
     this.emit('update');
   }
 }
-// console.log(Model.pushArray());
-
-// console.log(fs.readdirSync(pathTopic));
-// const a = fs.readdirSync(pathTopic);
-
-// let str = fs.readFileSync(`${pathTopic}/${a[1]}`, 'utf8');
-// str = str.split('\n');
-
-// const questionStr = str.filter((el, index) => index % 3 === 0);
-// const answerStr = str.filter((el, index) => ((index - 1) % 3) === 0);
-
-// console.log(questionStr);
-// console.log(answerStr);
 
 module.exports = Model;
