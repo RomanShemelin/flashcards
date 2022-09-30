@@ -8,10 +8,8 @@ class Controller {
     this.#view = view;
 
     // здесь будем ловить события View и соответственно изменять Model
-    this.#view.on('topicChosen', (numberOfTopic) => this.#model.chooseTopic(Number(numberOfTopic)));
-
-    // this.#view.on('')
-    // ...
+    this.#view.on('topicChosen', () => this.#model.startChosen());
+    this.#view.on('stop', () => this.#model.stopTopic());
   }
 
   run() {
