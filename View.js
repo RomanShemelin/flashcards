@@ -8,9 +8,10 @@ const pathTopic = path.join(__dirname, 'topics');
 class View extends EventEmitter {
   #model;
 
-  constructor(model) {
+  constructor(model, score = 0) {
     super();
     this.#model = model;
+    this.score = score
 
     // каждый раз когда модель изменяется обновляем отображение
     this.#model.on(
@@ -49,7 +50,8 @@ class View extends EventEmitter {
     const themes = fs.readdirSync(pathTopic);
     let str = themes.map((el, index) => (`${index + 1}) ${el}`));
     str = str.join('\n').replace(/.txt/gi, '');
-
+  //Score
+    console.log(`Общий результат: ${this.score} баллов!`);
     console.log(`Выберите тему:\n${str}\n`);
     this.emit('topicChosen');
   }
@@ -81,8 +83,10 @@ class View extends EventEmitter {
       answerFromUser = answerFromUser.toLowerCase();
       answers[i] = answers[i].toLowerCase();
       if (answerFromUser === answers[i]) {
+
         counter += 1;
         console.log(chalk.red(`${this.#randomGood()}\n`));
+        this.score += 1;
         readlineSync.question('Дальше =>');
       } else {
         console.log(chalk.green(`${this.#randomBad()} ${answers[i]}`));
@@ -90,9 +94,10 @@ class View extends EventEmitter {
       }
       if (i === (answers.length - 1)) {
         console.clear();
-        console.log(`Ты ответил(-а) на ${counter} вопрос(-а,-ов) правильно из ${answers.length}`);
+        console.log(`Ты ответил(-а) на ${counter} вопрос(-а,-ов) правильно из ${answers.length}\nА набрал в итоге: ${this.score} балл(-а, -ов)`);
         readlineSync.question('');
       }
+
     });
 
     this.emit('stop');
