@@ -82,10 +82,10 @@ class View extends EventEmitter {
       answers[i] = answers[i].toLowerCase();
       if (answerFromUser === answers[i]) {
         counter += 1;
-        console.log(`${this.#randomGood()}\n`);
+        console.log(chalk.red(`${this.#randomGood()}\n`));
         readlineSync.question('Дальше =>');
       } else {
-        console.log(`${this.#randomBad()} ${answers[i]}`);
+        console.log(chalk.green(`${this.#randomBad()} ${answers[i]}`));
         readlineSync.question('Дальше =>');
       }
       if (i === (answers.length - 1)) {
