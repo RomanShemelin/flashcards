@@ -26,7 +26,7 @@ class Model extends EventEmitter {
   }
 
   getPageAllQuestion() {
-    return (this.#questions);
+    return this.#questions;
   }
 
   // Стартовая страница с темами
