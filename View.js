@@ -8,9 +8,10 @@ const pathTopic = path.join(__dirname, 'topics');
 class View extends EventEmitter {
   #model;
 
-  constructor(model) {
+  constructor(model, score = 0) {
     super();
     this.#model = model;
+    this.score = score
 
     // каждый раз когда модель изменяется обновляем отображение
     this.#model.on(
@@ -37,6 +38,7 @@ class View extends EventEmitter {
     const themes = fs.readdirSync(pathTopic);
     let str = themes.map((el, index) => (`${index + 1}) ${el}`));
     str = str.join('\n').replace(/.txt/gi, '');
+    console.log(`Общий результат: ${this.score} баллов!`);
     console.log(`Выберите тему:\n${str}\n`);
     this.emit('topicChosen');
   }
@@ -61,10 +63,16 @@ class View extends EventEmitter {
       answerFromUser = answerFromUser.toLowerCase();
       if (answerFromUser === answers[i]) {
         console.log('Неплохо\n');
+        this.score += 1;
       } else {
         console.log(`Стыдно такое не знать, но ответ ${answers[i]}`);
+}
+      if (i === answers.length - 1) {
+        console.log(`Результат теста: ${this.score} баллов!`)
+
         readlineSync.question('Дальше =>');
       }
+
     });
 
     this.emit('stop');
