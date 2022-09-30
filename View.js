@@ -63,9 +63,10 @@ class View extends EventEmitter {
       answerFromUser = answerFromUser.toLowerCase();
       if (answerFromUser === answers[i]) {
         counter += 1;
-        console.log('Неплохо\n');
+        console.log(chalk.red('Неплохо\n'));
+        readlineSync.question('Дальше =>');
       } else {
-        console.log(`Стыдно такое не знать, но ответ ${answers[i]}`);
+        console.log(chalk.green(`Стыдно такое не знать, но ответ ${answers[i]}`));
         readlineSync.question('Дальше =>');
       }
       if (i === (answers.length - 1)) {
